@@ -1,0 +1,70 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+#include <Windows.h>
+using namespace std;
+const int SIZE = 10;
+int first, last;
+struct Foo
+{
+int key;
+char data[64];
+};
+Foo str[SIZE];
+void CIN()
+{
+srand(1);
+for (int i = 0; i < SIZE; i++)
+{
+cout << "Enter key:" << endl;
+cin >> str[i].key;
+cin.ignore();
+cout << "Enter info: " << endl;
+gets(str[i].data);
+}}
+void Print()
+{
+for (int i = 0; i < SIZE; i++)
+{
+cout << str[i].key << ". ";
+cout << str[i].data << endl;
+}
+}
+void Sort(int first, int last)
+{
+int mid;
+Foo temp;
+int f = first, l = last;
+mid = str[(f + l) / 2].key;
+do
+{
+while (str[f].key < mid) f++;
+while (str[l].key > mid) l--;
+if (f <= l)
+{
+temp.key = str[f].key;
+*temp.data = *str[f].data;
+str[f].key = str[l].key;
+*str[f].data = *str[l].data;
+str[l].key = temp.key;
+*str[l].data = *temp.data;
+f++;
+l--;
+}
+} while (f < l);
+if (first < l) Sort(first, l);
+if (f < last) Sort(f, last);
+}
+int main()
+{
+SetConsoleCP(1251);
+SetConsoleOutputCP(1251);
+first = 0;
+last = SIZE - 1;
+CIN();
+cout << "Ваша структура:" << endl;
+Print();
+cout << "Посортована структура:" << endl;
+Sort(first, last);
+Print();
+}
