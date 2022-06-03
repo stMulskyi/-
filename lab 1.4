@@ -1,0 +1,138 @@
+Файл Header.h
+#pragma once
+#include <iostream>
+#include <string>
+#include <Windows.h>
+using namespace std;
+const int Size = 15;
+class DATA
+{
+public:
+string car;
+int key;
+DATA(int key, string car);
+~DATA() = default;
+};
+DATA::DATA(int key, string car)
+{
+this->key = key;
+this->car = car;
+}
+Файл Hash.h
+#pragma once
+#include "Header.h"
+class HASH
+{
+private:
+DATA** element;
+public:
+HASH();
+~HASH() = default;
+int Hash(int key);
+string Member(int key);
+void Insert(int key, string car);
+void Delete(int key);void Clear();
+void Print();
+};
+HASH::HASH()
+{
+element = new DATA * [Size];
+for (int i = 0; i < Size; i++)
+{
+element[i] = NULL;
+}
+}
+int HASH::Hash(int key)
+{
+return key % Size;
+}
+string HASH::Member(int key)
+{
+int i = Hash(key);
+while (element[i] != NULL && element[i]->key != key)
+{
+i = Hash(i + 1);
+}
+if (element[i] == NULL)
+{
+cout << "No element found" << endl;
+}
+else
+{
+cout << "Found element: ";
+}
+return element[i]->car;
+}
+void HASH::Insert(int key, string car)
+{
+int i = Hash(key);
+while (element[i] != NULL && element[i]->key != key)
+{
+i = Hash(i + 1);
+}
+if (element[i] != NULL)
+{
+delete element[i];
+}
+element[i] = new DATA(key, car);
+}
+void HASH::Delete(int key)
+{
+int i = Hash(key);
+while (element[i] != NULL)
+{
+if (element[i]->key == key)
+{
+break;}
+i = Hash(i + 1);
+}
+if (element[i] == NULL)
+{
+cout << "Not found element on this key: " << key << endl;
+}
+else
+{
+delete element[i];
+cout << "Element deleted" << endl;
+}
+}
+void HASH::Clear()
+{
+for (int i = 0; i < Size; i++)
+{
+delete element[i];
+element[i] = nullptr;
+}
+}
+void HASH::Print()
+{
+for (int i = 0; i < Size; i++)
+{
+cout << "i[" << i << "]" << " - " << element[i]->car <<
+endl;
+}
+}
+Головна програма
+#include "Hash.h"
+int main()
+{
+HASH table;
+string car;
+int key;
+for (int i = 0; i < Size; i++)
+{
+cout << "Enter element in hash-table: ";
+cin >> car;
+cout << "Enter key of this element: ";
+cin >> key;
+table.Insert(key, car);
+cout << endl;
+}
+table.Print();
+cout << "Enter key for find element: ";
+cin >> key;
+cout << table.Member(key) << endl;
+cout << "Enter key for delete element: ";
+cin >> key;
+table.Delete(key);return 0;
+}
